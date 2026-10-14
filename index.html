@@ -28,6 +28,35 @@ h1,h2,.dela{ font-family:'Dela Gothic One',sans-serif; font-weight:400; }
 /* ---------- layout ---------- */
 .work{ display:grid; grid-template-columns:340px 1fr; gap:18px; padding:18px 22px 40px; max-width:1500px; margin:0 auto; align-items:start; }
 @media (max-width:980px){ .work{ grid-template-columns:1fr; } }
+/* ---------- mobile tabs ---------- */
+.mtabs{ display:none; }
+@media (max-width:768px){
+  .topbar{ padding:10px 14px; }
+  .brand .t{ font-size:18px; }
+  .mtabs{ display:flex; gap:8px; padding:10px 14px; position:sticky; top:57px; z-index:40; background:var(--bg); border-bottom:1px solid var(--line); }
+  .mtabs button{ flex:1; padding:11px; border-radius:12px; border:1px solid var(--line); background:var(--card); color:var(--ink2); font-size:15px; font-weight:600; cursor:pointer; }
+  .mtabs button.on{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
+  .work{ display:block; padding:12px 12px 40px; }
+  .work[data-mtab="tpl"] .editor,
+  .work[data-mtab="tpl"] .toolbar-tools,
+  .work[data-mtab="tpl"] .toolbar-export,
+  .work[data-mtab="tpl"] .pvwrap{ display:none; }
+  .work[data-mtab="edit"] .tstrip,
+  .work[data-mtab="edit"] .toolbar-export,
+  .work[data-mtab="edit"] .pvwrap{ display:none; }
+  .work[data-mtab="preview"] .editor,
+  .work[data-mtab="preview"] .tstrip,
+  .work[data-mtab="preview"] .toolbar-tools{ display:none; }
+  .editor{ position:static; max-height:none; }
+  .tstrip{ display:grid !important; grid-template-columns:1fr 1fr; gap:12px; overflow:visible; }
+  .tplcard{ width:auto; }
+  .tplcard .thumb{ height:210px; }
+  .tplcard .thumb .doc{ transform:scale(.24); }
+  .tplcard .nm{ font-size:13px; padding:8px 4px; }
+  .toolbar{ justify-content:flex-start; }
+  .frow input, .frow textarea, .frow select{ font-size:16px; padding:10px 12px; }
+  .btn{ padding:11px 18px; font-size:15px; }
+}
 /* ---------- editor panel ---------- */
 .editor{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:18px; position:sticky; top:76px; max-height:calc(100vh - 100px); overflow-y:auto; }
 .editor h3{ font-size:13px; letter-spacing:2px; margin:18px 0 10px; color:var(--ink2); font-family:'Noto Sans TC'; font-weight:700; }
@@ -206,17 +235,22 @@ table.items td.p, table.items th.p, table.items td.a, table.items th.a{ text-ali
     <button class="tbtn" data-th="black" title="black" style="background:#222"></button>
   </div>
 </div>
-<div class="work">
+<div class="mtabs" id="mtabs">
+  <button data-mtab="tpl" class="on">模板</button>
+  <button data-mtab="edit">編輯</button>
+  <button data-mtab="preview">預覽</button>
+</div>
+<div class="work" data-mtab="tpl">
   <div class="editor" id="editor"></div>
   <div class="stage">
-    <div class="toolbar">
+    <div class="toolbar toolbar-tools">
       <span class="lbl" data-i="doct">單據</span>
       <div class="seg" id="docType"><button data-v="quotation" class="on">報價單</button><button data-v="invoice">發票</button><button data-v="receipt">收據</button></div>
       <span class="lbl" data-i="langm">語言</span>
       <div class="seg" id="docLang"><button data-v="both" class="on">雙語</button><button data-v="zh">中文</button><button data-v="en">EN</button></div>
     </div>
     <div class="tstrip" id="tstrip"></div>
-    <div class="toolbar">
+    <div class="toolbar toolbar-export">
       <button class="btn primary" id="bPng">PNG</button>
       <button class="btn" id="bJpg">JPG</button>
       <button class="btn" id="bPdf">PDF</button>
@@ -447,6 +481,13 @@ $('fLoad').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileR
 /* ================= boot ================= */
 applyTheme(); buildChrome(); buildEditor(); buildStrip(); render();
 window.addEventListener('resize',fitPreview);
+/* mobile tabs */
+document.querySelectorAll('#mtabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#mtabs button').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelector('.work').dataset.mtab=b.dataset.mtab;
+  fitPreview();
+  window.scrollTo(0,0);
+});
 </script>
 </body>
 </html>
