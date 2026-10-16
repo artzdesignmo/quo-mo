@@ -28,34 +28,25 @@ h1,h2,.dela{ font-family:'Dela Gothic One',sans-serif; font-weight:400; }
 /* ---------- layout ---------- */
 .work{ display:grid; grid-template-columns:340px 1fr; gap:18px; padding:18px 22px 40px; max-width:1500px; margin:0 auto; align-items:start; }
 @media (max-width:980px){ .work{ grid-template-columns:1fr; } }
-/* ---------- mobile tabs ---------- */
-.mtabs{ display:none; }
+/* ---------- mobile ---------- */
 @media (max-width:768px){
   .topbar{ padding:10px 14px; }
   .brand .t{ font-size:18px; }
-  .mtabs{ display:flex; gap:8px; padding:10px 14px; position:sticky; top:57px; z-index:40; background:var(--bg); border-bottom:1px solid var(--line); }
-  .mtabs button{ flex:1; padding:11px; border-radius:12px; border:1px solid var(--line); background:var(--card); color:var(--ink2); font-size:15px; font-weight:600; cursor:pointer; }
-  .mtabs button.on{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
-  .work{ display:block; padding:12px 12px 40px; }
-  .work[data-mtab="tpl"] .editor,
-  .work[data-mtab="tpl"] .toolbar-tools,
-  .work[data-mtab="tpl"] .toolbar-export,
-  .work[data-mtab="tpl"] .pvwrap{ display:none; }
-  .work[data-mtab="edit"] .tstrip,
-  .work[data-mtab="edit"] .toolbar-export,
-  .work[data-mtab="edit"] .pvwrap{ display:none; }
-  .work[data-mtab="preview"] .editor,
-  .work[data-mtab="preview"] .tstrip,
-  .work[data-mtab="preview"] .toolbar-tools{ display:none; }
-  .editor{ position:static; max-height:none; }
-  .tstrip{ display:grid !important; grid-template-columns:1fr 1fr; gap:12px; overflow:visible; }
-  .tplcard{ width:auto; }
+  #screenTpl{ padding:16px 12px 60px; }
+  .tplgrid{ grid-template-columns:1fr 1fr; gap:12px; }
   .tplcard .thumb{ height:210px; }
   .tplcard .thumb .doc{ transform:scale(.24); }
-  .tplcard .nm{ font-size:13px; padding:8px 4px; }
+  .work{ display:block; padding:12px 12px 40px; }
+  .work[data-mtab="edit"] .pvwrap,
+  .work[data-mtab="edit"] .toolbar-export{ display:none; }
+  .work[data-mtab="preview"] .editor{ display:none; }
+  .editor{ position:static; max-height:none; margin-bottom:14px; }
   .toolbar{ justify-content:flex-start; }
   .frow input, .frow textarea, .frow select{ font-size:16px; padding:10px 12px; }
   .btn{ padding:11px 18px; font-size:15px; }
+  .mtabs{ display:flex; gap:8px; padding:10px 0; position:sticky; top:0; z-index:40; background:var(--bg); }
+  .mtabs button{ flex:1; padding:11px; border-radius:12px; border:1px solid var(--line); background:var(--card); color:var(--ink2); font-size:15px; font-weight:600; cursor:pointer; }
+  .mtabs button.on{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
 }
 /* ---------- editor panel ---------- */
 .editor{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:18px; position:sticky; top:76px; max-height:calc(100vh - 100px); overflow-y:auto; }
@@ -73,8 +64,7 @@ h1,h2,.dela{ font-family:'Dela Gothic One',sans-serif; font-weight:400; }
 .btnrow{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
 .itemrow{ border:1px solid var(--line); border-radius:10px; padding:10px; margin-bottom:10px; background:var(--card); position:relative; }
 .itemrow .del{ position:absolute; top:8px; right:8px; border:0; background:transparent; color:#c0392b; cursor:pointer; font-size:16px; }
-/* ---------- template strip ---------- */
-.tstrip{ display:flex; gap:10px; overflow-x:auto; padding:4px 2px 12px; margin-bottom:6px; }
+/* ---------- template grid (screen 1) ---------- */
 .tplcard{ flex:0 0 108px; cursor:pointer; border:2px solid transparent; border-radius:10px; overflow:hidden; background:var(--card); transition:.15s; }
 .tplcard.on{ border-color:var(--ink); }
 .tplcard .thumb{ height:132px; overflow:hidden; position:relative; background:#fff; }
@@ -213,10 +203,46 @@ table.items td.p, table.items th.p, table.items td.a, table.items th.a{ text-ali
 .doc.tpl12 .meta-table td.k{ text-align:right; } .doc.tpl12 .meta-table td.v{ text-align:left; }
 .doc.tpl12 .d-rule{ border-top:3px double var(--ac); }
 .doc.tpl12 table.items th{ border-top:2px solid var(--ac); border-bottom:2px solid var(--ac); color:var(--ac); }
+/* ---------- screens: 1) template select 2) preview & settings ---------- */
+#screenTpl{ max-width:1180px; margin:0 auto; padding:26px 22px 60px; }
+#screenEdit{ display:none; }
+body[data-screen="edit"] #screenTpl{ display:none; }
+body[data-screen="edit"] #screenEdit{ display:block; }
+.tpl-head{ text-align:center; margin:8px 0 22px; }
+.tpl-head h2{ font-size:26px; letter-spacing:2px; }
+.tpl-head p{ font-size:13px; color:var(--ink2); margin-top:8px; }
+.tplgrid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; }
+.tplcard{ cursor:pointer; border:2px solid transparent; border-radius:12px; overflow:hidden; background:var(--card); transition:.15s; }
+.tplcard.on{ border-color:var(--ink); box-shadow:0 6px 22px rgba(0,0,0,.12); }
+.tplcard .thumb{ height:250px; overflow:hidden; position:relative; background:#fff; }
+.tplcard .thumb .doc{ transform:scale(.25); transform-origin:top left; width:794px; }
+.tplcard .nm{ font-size:13px; text-align:center; padding:10px 4px; color:var(--ink); font-weight:500; }
+/* format panel at bottom of template page */
+.fmtpanel{ margin-top:28px; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:20px 22px; }
+.fmtpanel h3{ font-size:13px; letter-spacing:2px; color:var(--ink2); margin-bottom:14px; font-weight:700; }
+.fmtgrid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px 22px; }
+.fmtitem label{ display:block; font-size:12px; color:var(--ink2); margin-bottom:8px; font-weight:600; }
+.fmtitem input[type=range]{ width:100%; }
+.fmtval{ font-size:12px; color:var(--ink); margin-left:6px; }
+.swatches{ display:flex; gap:8px; flex-wrap:wrap; }
+.sw{ width:30px; height:30px; border-radius:50%; border:2px solid transparent; cursor:pointer; padding:0; }
+.sw.on{ border-color:var(--ink); }
+.segwrap .seg button{ padding:8px 14px; }
+.nextbar{ position:sticky; bottom:0; margin-top:24px; padding:16px; background:var(--bg); border-top:1px solid var(--line); display:flex; justify-content:center; z-index:40; }
+.nextbar .btn{ padding:14px 54px; font-size:16px; }
+.backbtn{ margin-bottom:12px; }
+/* doc format overrides */
+.doc.ff-serif{ font-family:Georgia,'Noto Serif TC',serif; }
+.doc.ff-mono{ font-family:'Courier New',monospace; }
+.doc.tpos-center .doc-type{ text-align:center; }
+.doc.tpos-center .d-meta{ text-align:center; }
+.doc.tpos-center .meta-table td.k{ text-align:right; }
+.doc.tpos-center .meta-table td.v{ text-align:left; }
+.doc.tpos-left .doc-type{ text-align:left; }
 /* print */
 @media print{
   body{ background:#fff; }
-  .topbar,.editor,.toolbar,.tstrip,.hctl{ display:none !important; }
+  .topbar,.editor,.toolbar,.hctl,#screenTpl,.nextbar,.fmtpanel,.backbtn,#mtabs2{ display:none !important; }
   .work{ display:block; padding:0; max-width:none; }
   .pvwrap{ max-width:none; }
   .pvscale{ transform:none !important; }
@@ -235,21 +261,35 @@ table.items td.p, table.items th.p, table.items td.a, table.items th.a{ text-ali
     <button class="tbtn" data-th="black" title="black" style="background:#222"></button>
   </div>
 </div>
-<div class="mtabs" id="mtabs">
-  <button data-mtab="tpl" class="on">模板</button>
-  <button data-mtab="edit">編輯</button>
-  <button data-mtab="preview">預覽</button>
+<div id="screenTpl">
+  <div class="tpl-head">
+    <h2 data-i="tpltitle">選擇模版</h2>
+    <p data-i="tplsub">先選一個模版，下一步進入預覽同內容設置</p>
+  </div>
+  <div class="tplgrid" id="tplgrid"></div>
+  <div class="fmtpanel">
+    <h3 data-i="fmttitle">模版格式設置</h3>
+    <div class="fmtgrid" id="fmtgrid"></div>
+  </div>
+  <div class="nextbar">
+    <button class="btn primary" id="bNext" data-i="next">下一步：預覽同設置 →</button>
+  </div>
 </div>
-<div class="work" data-mtab="tpl">
+<div id="screenEdit">
+<div class="mtabs" id="mtabs2" style="display:none">
+  <button data-mtab="edit">編輯</button>
+  <button data-mtab="preview" class="on">預覽</button>
+</div>
+<div class="work" data-mtab="preview">
   <div class="editor" id="editor"></div>
   <div class="stage">
+    <div class="backbtn"><button class="btn small" id="bBack" data-i="back">← 返回選擇模版</button></div>
     <div class="toolbar toolbar-tools">
       <span class="lbl" data-i="doct">單據</span>
       <div class="seg" id="docType"><button data-v="quotation" class="on">報價單</button><button data-v="invoice">發票</button><button data-v="receipt">收據</button></div>
       <span class="lbl" data-i="langm">語言</span>
       <div class="seg" id="docLang"><button data-v="both" class="on">雙語</button><button data-v="zh">中文</button><button data-v="en">EN</button></div>
     </div>
-    <div class="tstrip" id="tstrip"></div>
     <div class="toolbar toolbar-export">
       <button class="btn primary" id="bPng">PNG</button>
       <button class="btn" id="bJpg">JPG</button>
@@ -261,13 +301,14 @@ table.items td.p, table.items th.p, table.items td.a, table.items th.a{ text-ali
     <div class="pvwrap"><div class="pvscale" id="pvscale"><div class="sheet"><div id="preview"></div></div></div></div>
   </div>
 </div>
+</div>
 <script>
 /* ================= Quo-mo ================= */
 const $=id=>document.getElementById(id);
 /* ---- app UI language (default zh) ---- */
 const UI={
- zh:{doct:'單據',langm:'語言',save:'儲存檔案',load:'讀取檔案',seller:'賣方資訊',meta:'單據資訊',client:'客戶資訊',items:'明細項目',total:'金額',pay:'支付資訊',rmk:'備註及簽署',add:'＋ 新增項目',logo:'上載 Logo',clear:'清除'},
- en:{doct:'Document',langm:'Language',save:'Save file',load:'Load file',seller:'Seller info',meta:'Document info',client:'Bill to',items:'Line items',total:'Totals',pay:'Payment',rmk:'Notes & signature',add:'+ Add item',logo:'Upload logo',clear:'Clear'}
+ zh:{doct:'單據',langm:'語言',save:'儲存檔案',load:'讀取檔案',seller:'賣方資訊',meta:'單據資訊',client:'客戶資訊',items:'明細項目',total:'金額',pay:'支付資訊',rmk:'備註及簽署',add:'＋ 新增項目',logo:'上載 Logo',clear:'清除',tpltitle:'選擇模版',tplsub:'先選一個模版，下一步進入預覽同內容設置',fmttitle:'模版格式設置',next:'下一步：預覽同設置 →',back:'← 返回選擇模版',font:'字型',titlesize:'主標題字大小',bodysize:'內容字大小',bgcolor:'單據底色',accent:'主題色',tpos:'標題位置',left:'靠左',center:'置中',right:'靠右',theme:'跟隨模版',edit:'編輯',preview:'預覽'},
+ en:{doct:'Document',langm:'Language',save:'Save file',load:'Load file',seller:'Seller info',meta:'Document info',client:'Bill to',items:'Line items',total:'Totals',pay:'Payment',rmk:'Notes & signature',add:'+ Add item',logo:'Upload logo',clear:'Clear',tpltitle:'Choose a Template',tplsub:'Pick a template first, then preview and edit content',fmttitle:'Template Format',next:'Next: Preview & Settings →',back:'← Back to Templates',font:'Font',titlesize:'Title Size',bodysize:'Body Size',bgcolor:'Doc Background',accent:'Accent Color',tpos:'Title Position',left:'Left',center:'Center',right:'Right',theme:'Follow Theme',edit:'Edit',preview:'Preview'}
 };
 let uiLang=localStorage.getItem('quomo-ui')||'zh';
 const T=k=>(UI[uiLang]&&UI[uiLang][k])||UI.zh[k]||k;
@@ -308,6 +349,7 @@ const TPLS=[
 const today=()=>new Date().toISOString().slice(0,10);
 function blankDoc(){return{
  type:'quotation',lang:'both',tpl:1,
+ fmt:{font:'noto',title:0,body:0,bg:'',accent:'',tpos:''},
  seller:{name_zh:'澳門創意設計有限公司',name_en:'Macau Creative Design Ltd.',addr:'澳門新口岸皇朝區商務中心 18 樓',phone:'(853) 2888 0000',email:'info@example.mo',logo:''},
  meta:{no:'Q-2026-001',date:today(),validity:''},
  client:{co:'',contact:'',phone:'',email:''},
@@ -350,16 +392,25 @@ const amtWords=()=>{const t=grandTotal();return doc.lang==='en'?enWords(t):doc.l
 /* ================= render doc ================= */
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');}
 function renderDoc(){
- const c=doc.tpl, s=doc.seller, m=doc.meta;
+ const c=doc.tpl, s=doc.seller, m=doc.meta, f=doc.fmt||{};
  const sellerName=doc.lang==='en'?esc(s.name_en):doc.lang==='zh'?esc(s.name_zh):esc(s.name_zh)+'<br>'+esc(s.name_en);
  const contact=[esc(s.addr),'T: '+esc(s.phone),esc(s.email)].filter(x=>x&&x!=='T: ').join('<br>');
  const band=c===3?'<div class="band"></div>':'';
  const tile=c===9?'<div class="tile"></div>':'';
+ // format overrides
+ const fontCls=f.font&&f.font!=='noto'?' ff-'+f.font:'';
+ const tposCls=f.tpos?' tpos-'+f.tpos:'';
+ const docStyle=[
+   f.body?'font-size:'+f.body+'px':'',
+   f.bg?'background:'+f.bg:''
+ ].filter(Boolean).join(';');
+ const titleStyle=f.title?'font-size:'+f.title+'px':'';
+ const accentStyle=f.accent?'--ac:'+f.accent:'';
  const inner=
   (c===3?band:tile)+
   '<div class="d-head"><div class="seller"><div class="logo-box">'+(s.logo?'<img src="'+s.logo+'">':'LOGO')+'</div>'+
   '<div><div class="seller-name">'+sellerName+'</div><div class="seller-contact">'+contact+'</div></div></div>'+
-  '<div class="d-meta"><div class="doc-type">'+docName()+'</div><table class="meta-table">'+
+  '<div class="d-meta"><div class="doc-type"'+(titleStyle?' style="'+titleStyle+'"':'')+'>'+docName()+'</div><table class="meta-table">'+
   '<tr><td class="k">'+(doc.lang==='zh'?'單據編號':doc.lang==='en'?'No.':'單據編號 No.')+'</td><td class="v">'+esc(m.no)+'</td></tr>'+
   '<tr><td class="k">'+L('date')+'</td><td class="v">'+esc(m.date)+'</td></tr>'+
   (m.validity?'<tr><td class="k">'+L('validity')+'</td><td class="v">'+esc(m.validity)+'</td></tr>':'')+
@@ -376,12 +427,13 @@ function renderDoc(){
    (doc.pay.accname?'<div class="ln">'+L('accname')+': '+esc(doc.pay.accname)+'</div>':'')+
    (doc.pay.accno?'<div class="ln">'+L('accno')+': '+esc(doc.pay.accno)+'</div>':'')+
    (doc.pay.cheque?'<div class="ln">'+L('cheque')+': '+esc(doc.pay.cheque)+'</div>':'')+'</div>':'')+
-  (doc.rmk?'<div class="d-rmk"><div class="cap">'+L('rmk')+'</div><div class="tx">'+esc(doc.rmk)+'</div></div>':'')+
-  '<div class="d-sign"><div class="sign-box"><div class="sign-line">'+L('seller')+(doc.signName?'<br>'+esc(doc.signName):'')+'</div></div>'+
+  '<div class="d-sign"><div class="sign-box"><div class="sign-line">'+(doc.signName?esc(doc.signName):'')+'</div></div>'+
   (doc.showChop?'<div class="sign-box"><div class="chop">公司蓋章<br>CHOP</div><div class="sign-line" style="margin-top:8px">'+L('sign')+'</div></div>':'')+
   '<div class="sign-box"><div class="sign-line">'+(doc.lang==='zh'?'客戶簽署':doc.lang==='en'?'Client Signature':'客戶簽署 Client')+'</div></div></div>'+
-  '<div class="d-foot">Quo-mo · '+(doc.lang==='zh'?'澳門商業單據':'Macau Business Document')+'</div>';
- return '<div class="doc tpl'+c+'">'+(c===3||c===9?inner:'<div style="display:flex;flex-direction:column;flex:1">'+inner+'</div>')+'</div>';
+  (doc.rmk?'<div class="d-rmk"><div class="cap">'+L('rmk')+'</div><div class="tx">'+esc(doc.rmk)+'</div></div>':'');
+ const cls='doc tpl'+c+fontCls+tposCls;
+ const sty=[docStyle,accentStyle].filter(Boolean).join(';');
+ return '<div class="'+cls+'"'+(sty?' style="'+sty+'"':'')+'>'+(c===3||c===9?inner:'<div style="display:flex;flex-direction:column;flex:1">'+inner+'</div>')+'</div>';
 }
 function render(){
  $('preview').innerHTML=renderDoc();
@@ -389,7 +441,7 @@ function render(){
  // sync toolbar
  document.querySelectorAll('#docType button').forEach(b=>b.classList.toggle('on',b.dataset.v===doc.type));
  document.querySelectorAll('#docLang button').forEach(b=>b.classList.toggle('on',b.dataset.v===doc.lang));
- document.querySelectorAll('.tplcard').forEach((el,i)=>el.classList.toggle('on',TPLS[i].c===doc.tpl));
+ document.querySelectorAll('#tplgrid .tplcard').forEach(el=>el.classList.toggle('on',+el.dataset.t===doc.tpl));
 }
 function fitPreview(){
  const w=$('pvscale').parentElement.clientWidth||700;
@@ -443,11 +495,34 @@ function buildEditor(){
 function setPath(k,v){const ks=k.split('.');let o=doc;for(let i=0;i<ks.length-1;i++)o=o[ks[i]];o[ks[ks.length-1]]=v;render();}
 document.querySelectorAll('#docType button').forEach(b=>b.onclick=()=>{doc.type=b.dataset.v;render();});
 document.querySelectorAll('#docLang button').forEach(b=>b.onclick=()=>{doc.lang=b.dataset.v;render();});
-/* ================= template strip ================= */
-function buildStrip(){
- $('tstrip').innerHTML=TPLS.map((t,i)=>'<div class="tplcard'+(t.c===doc.tpl?' on':'')+'" data-t="'+t.c+'"><div class="thumb">'+renderDoc().replace('tpl'+doc.tpl,'tpl'+t.c)+'</div><div class="nm">'+t.n+'</div></div>').join('');
- $('tstrip').querySelectorAll('.tplcard').forEach(el=>el.onclick=()=>{doc.tpl=+el.dataset.t;buildStrip();render();});
+/* ================= template select screen ================= */
+function buildTplGrid(){
+ $('tplgrid').innerHTML=TPLS.map(t=>'<div class="tplcard'+(t.c===doc.tpl?' on':'')+'" data-t="'+t.c+'"><div class="thumb">'+renderDoc().replace('tpl'+doc.tpl,'tpl'+t.c)+'</div><div class="nm">'+t.n+'</div></div>').join('');
+ $('tplgrid').querySelectorAll('.tplcard').forEach(el=>el.onclick=()=>{doc.tpl=+el.dataset.t;buildTplGrid();render();});
 }
+const FONTS=[{id:'noto',n:'Noto Sans 黑體'},{id:'serif',n:'宋體 Serif'},{id:'mono',n:'等寬 Mono'}];
+const BGCOLORS=['#ffffff','#faf8f2','#f4f6f8','#f9f4f4','#f2f7f2'];
+const ACCENTS=['#1a3a5c','#0e7c7b','#a8842c','#0b5fa5','#c9a24b','#e0653a','#8c1d18','#5b8dd9'];
+function buildFmt(){
+ const f=doc.fmt=doc.fmt||{};
+ if(!f.font)f.font='noto';
+ $('fmtgrid').innerHTML=
+ '<div class="fmtitem"><label>'+T('font')+'</label><div class="seg segwrap">'+FONTS.map(o=>'<button data-f="'+o.id+'" class="'+(f.font===o.id?'on':'')+'">'+o.n+'</button>').join('')+'</div></div>'+
+ '<div class="fmtitem"><label>'+T('titlesize')+'<span class="fmtval">'+(f.title||'預設')+'</span></label><input type="range" min="18" max="44" value="'+(f.title||26)+'" data-fr="title"></div>'+
+ '<div class="fmtitem"><label>'+T('bodysize')+'<span class="fmtval">'+(f.body||'預設')+'</span></label><input type="range" min="11" max="17" value="'+(f.body||13)+'" data-fr="body"></div>'+
+ '<div class="fmtitem"><label>'+T('bgcolor')+'</label><div class="swatches">'+BGCOLORS.map(c=>'<button class="sw'+(f.bg===c?' on':'')+'" data-bg="'+c+'" style="background:'+c+';border-color:#ccc" title="'+c+'"></button>').join('')+'<button class="btn small" data-bg="">'+T('theme')+'</button></div></div>'+
+ '<div class="fmtitem"><label>'+T('accent')+'</label><div class="swatches">'+ACCENTS.map(c=>'<button class="sw'+(f.accent===c?' on':'')+'" data-ac="'+c+'" style="background:'+c+'" title="'+c+'"></button>').join('')+'<button class="btn small" data-ac="">'+T('theme')+'</button></div></div>'+
+ '<div class="fmtitem"><label>'+T('tpos')+'</label><div class="seg segwrap"><button data-tp="" class="'+(!f.tpos?'on':'')+'">'+T('theme')+'</button><button data-tp="left" class="'+(f.tpos==='left'?'on':'')+'">'+T('left')+'</button><button data-tp="center" class="'+(f.tpos==='center'?'on':'')+'">'+T('center')+'</button><button data-tp="right" class="'+(f.tpos==='right'?'on':'')+'">'+T('right')+'</button></div></div>';
+ $('fmtgrid').querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{doc.fmt.font=b.dataset.f;buildFmt();render();});
+ $('fmtgrid').querySelectorAll('[data-fr]').forEach(r=>r.oninput=()=>{doc.fmt[r.dataset.fr]=+r.value;r.previousElementSibling.querySelector('.fmtval').textContent=r.value;render();});
+ $('fmtgrid').querySelectorAll('[data-bg]').forEach(b=>b.onclick=()=>{doc.fmt.bg=b.dataset.bg;buildFmt();render();});
+ $('fmtgrid').querySelectorAll('[data-ac]').forEach(b=>b.onclick=()=>{doc.fmt.accent=b.dataset.ac;buildFmt();render();});
+ $('fmtgrid').querySelectorAll('[data-tp]').forEach(b=>b.onclick=()=>{doc.fmt.tpos=b.dataset.tp;buildFmt();render();});
+}
+/* screen nav */
+function goScreen(s){document.body.dataset.screen=s;window.scrollTo(0,0);if(s==='edit')setTimeout(fitPreview,50);try{localStorage.setItem('quomo-screen',s)}catch(e){}}
+$('bNext').onclick=()=>goScreen('edit');
+$('bBack').onclick=()=>goScreen('tpl');
 /* ================= export ================= */
 function docStyles(){
  // extract doc-related CSS for standalone export
@@ -477,17 +552,28 @@ $('bPdf').onclick=()=>window.print();
 /* ================= save / load ================= */
 $('bSave').onclick=()=>{download(URL.createObjectURL(new Blob([JSON.stringify(doc)],{type:'application/json'})),'quomo-'+doc.type+'-'+doc.meta.no+'.json');};
 $('bLoad').onclick=()=>$('fLoad').click();
-$('fLoad').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{doc=Object.assign(blankDoc(),JSON.parse(r.result));buildEditor();buildStrip();render();}catch(err){alert('Invalid file');}};r.readAsText(f);};
+$('fLoad').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{doc=Object.assign(blankDoc(),JSON.parse(r.result));buildEditor();buildTplGrid();buildFmt();render();}catch(err){alert('Invalid file');}};r.readAsText(f);};
 /* ================= boot ================= */
-applyTheme(); buildChrome(); buildEditor(); buildStrip(); render();
+applyTheme(); buildChrome(); buildEditor(); buildTplGrid(); buildFmt(); render();
+goScreen(localStorage.getItem('quomo-screen')==='edit'?'edit':'tpl');
 window.addEventListener('resize',fitPreview);
-/* mobile tabs */
-document.querySelectorAll('#mtabs button').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('#mtabs button').forEach(x=>x.classList.toggle('on',x===b));
-  document.querySelector('.work').dataset.mtab=b.dataset.mtab;
+/* mobile tabs for screen 2 */
+const mt2=$('mtabs2');
+function syncMt2(){mt2.style.display=window.innerWidth<=768?'flex':'none';}
+window.addEventListener('resize',syncMt2);syncMt2();
+mt2.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  mt2.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelector('#screenEdit .work').dataset.mtab=b.dataset.mtab;
   fitPreview();
   window.scrollTo(0,0);
 });
+/* show mobile tab labels */
+function buildChrome2(){
+  mt2.querySelectorAll('button').forEach(b=>b.textContent=T(b.dataset.mtab==='edit'?'edit':'preview'));
+}
+const _buildChrome=buildChrome;
+buildChrome=function(){_buildChrome();buildChrome2();buildFmt();};
+buildChrome();
 </script>
 </body>
 </html>
