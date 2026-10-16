@@ -240,6 +240,120 @@ body[data-screen="edit"] #screenEdit{ display:block; }
 .doc.tpos-center .meta-table td.k{ text-align:right; }
 .doc.tpos-center .meta-table td.v{ text-align:left; }
 .doc.tpos-left .doc-type{ text-align:left; }
+/* ---------- 9 new templates from reference images ---------- */
+/* tpl13 — 極簡收據 Receipt (ref: Apple receipt, monochrome minimal) */
+.doc.tpl13{ --ac:#111; font-family:'Helvetica Neue',Arial,'Noto Sans TC',sans-serif; }
+.doc.tpl13 .d-head{ flex-direction:column; align-items:flex-start; gap:12px; }
+.doc.tpl13 .seller-name{ font-size:15px; }
+.doc.tpl13 .seller-contact{ font-size:11px; }
+.doc.tpl13 .d-meta{ text-align:left; min-width:0; }
+.doc.tpl13 .doc-type{ font-size:15px; letter-spacing:0; text-align:left; margin-bottom:6px; }
+.doc.tpl13 .meta-table td.k{ text-align:left; color:#555; }
+.doc.tpl13 .meta-table td.v{ text-align:left; }
+.doc.tpl13 .d-rule{ border-top:1px solid #111; }
+.doc.tpl13 table.items th{ border:0; border-top:1px solid #111; border-bottom:1px solid #111; font-size:10px; letter-spacing:1px; padding:8px 6px; }
+.doc.tpl13 table.items td{ border:0; border-bottom:1px solid #eee; font-size:11px; padding:8px 6px; }
+.doc.tpl13 .tot-row{ font-size:12px; }
+.doc.tpl13 .tot-row.grand{ border-top:2px solid #111; font-size:14px; }
+.doc.tpl13 .billto .co{ font-size:13px; }
+/* tpl14 — 藍調現代 Fidèle (ref: blue on light gray, Swiss grid) */
+.doc.tpl14{ --ac:#1d4ed8; background:#f8fafc; }
+.doc.tpl14 .doc-type{ color:var(--ac); font-size:46px; font-weight:800; letter-spacing:-1px; line-height:1; }
+.doc.tpl14 .d-head{ align-items:flex-end; }
+.doc.tpl14 .d-meta{ text-align:right; }
+.doc.tpl14 table.items{ border:1px solid #cbd8ec; }
+.doc.tpl14 table.items th{ color:var(--ac); border-bottom:2px solid var(--ac); font-size:10px; letter-spacing:2px; text-transform:uppercase; background:transparent; }
+.doc.tpl14 table.items td{ border-bottom:1px solid #dbe4f0; }
+.doc.tpl14 .d-rule{ border-color:var(--ac); }
+.doc.tpl14 .tot-row.grand{ color:var(--ac); border-color:var(--ac); }
+.doc.tpl14 .seller-name{ color:var(--ac); }
+/* tpl15 — 編輯體 Editorial (ref: huge centered Quotation) */
+.doc.tpl15{ --ac:#111; }
+.doc.tpl15 .d-head{ flex-direction:column; align-items:center; text-align:center; gap:10px; }
+.doc.tpl15 .seller{ flex-direction:column; align-items:center; text-align:center; }
+.doc.tpl15 .doc-type{ font-size:64px; font-weight:800; letter-spacing:-2px; line-height:1; order:-1; margin-bottom:4px; }
+.doc.tpl15 .d-meta{ text-align:center; min-width:0; }
+.doc.tpl15 .meta-table{ margin:0 auto; }
+.doc.tpl15 .meta-table td.k{ text-align:right; color:#777; }
+.doc.tpl15 .meta-table td.v{ text-align:left; }
+.doc.tpl15 .d-rule{ border-top:1px solid #111; }
+.doc.tpl15 table.items th{ border-top:1px solid #111; border-bottom:1px solid #111; font-size:10px; letter-spacing:2px; text-transform:uppercase; font-weight:700; }
+.doc.tpl15 table.items td{ border-bottom:1px solid #e5e5e5; }
+.doc.tpl15 .d-totals{ justify-content:center; }
+.doc.tpl15 .tot-box{ min-width:320px; }
+.doc.tpl15 .tot-row.grand{ border-top:2px solid #111; }
+.doc.tpl15 .billto{ text-align:center; }
+/* tpl16 — 粗黑體 Bold (ref: massive grotesque Invoice) */
+.doc.tpl16{ --ac:#000; }
+.doc.tpl16 .doc-type{ font-size:72px; font-weight:900; letter-spacing:-3px; line-height:.95; }
+.doc.tpl16 .d-head{ align-items:flex-start; }
+.doc.tpl16 .d-meta{ text-align:right; padding-top:10px; }
+.doc.tpl16 .d-rule{ border-top:1px solid #000; }
+.doc.tpl16 table.items th{ font-size:12px; font-weight:800; border-bottom:3px solid #000; text-transform:uppercase; letter-spacing:1px; }
+.doc.tpl16 table.items td{ border-bottom:1px solid #ddd; }
+.doc.tpl16 .tot-row.grand{ font-size:20px; border-top:3px solid #000; }
+.doc.tpl16 .d-sign{ border-top:1px solid #000; margin-top:30px; padding-top:24px; }
+.doc.tpl16 .seller-name{ font-weight:900; letter-spacing:-.5px; }
+/* tpl17 — 歐式正式 Euro (ref: cream, serif, double rules) */
+.doc.tpl17{ --ac:#8b7355; background:#fdfbf7; }
+.doc.tpl17 .doc-type{ font-family:Georgia,'Noto Serif TC',serif; font-size:32px; letter-spacing:2px; color:var(--ac); }
+.doc.tpl17 .d-head{ border-bottom:3px double var(--ac); padding-bottom:22px; }
+.doc.tpl17 .d-rule{ display:none; }
+.doc.tpl17 .seller-name{ font-family:Georgia,'Noto Serif TC',serif; color:var(--ac); }
+.doc.tpl17 table.items th{ font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--ac); border-bottom:1px solid var(--ac); font-weight:700; }
+.doc.tpl17 table.items td{ border-bottom:1px dotted #d8cfc0; }
+.doc.tpl17 .tot-row.grand{ font-family:Georgia,'Noto Serif TC',serif; color:var(--ac); border-color:var(--ac); }
+.doc.tpl17 .meta-table td.k{ color:#a08c6f; }
+/* tpl18 — 螢光綠 Acid (ref: green header block, bold modern) */
+.doc.tpl18{ --ac:#4d7c0f; }
+.doc.tpl18 .d-head{ background:#a3e635; margin:-56px -60px 0; padding:44px 60px 34px; }
+.doc.tpl18 .doc-type{ font-size:54px; font-weight:900; letter-spacing:-1px; color:#111; line-height:1; }
+.doc.tpl18 .seller-name{ color:#111; font-weight:800; }
+.doc.tpl18 .seller-contact{ color:#3f6212; }
+.doc.tpl18 .meta-table td.k{ color:#3f6212; }
+.doc.tpl18 .d-rule{ display:none; }
+.doc.tpl18 table.items th{ background:#111; color:#a3e635; border:0; font-size:11px; letter-spacing:1px; }
+.doc.tpl18 table.items td{ border-bottom:1px solid #e5e5e5; }
+.doc.tpl18 .d-totals .tot-box{ background:#f0fdf4; border:2px solid #a3e635; border-radius:12px; padding:12px 18px; }
+.doc.tpl18 .tot-row.grand{ border:0; color:#111; }
+.doc.tpl18 .billto{ margin-top:20px; }
+/* tpl19 — 經典商務 Biz (ref: logo + grid table, classic) */
+.doc.tpl19{ --ac:#1e3a5f; }
+.doc.tpl19 .doc-type{ font-family:Georgia,serif; font-size:30px; color:var(--ac); }
+.doc.tpl19 .seller-name{ color:var(--ac); font-size:19px; }
+.doc.tpl19 table.items th, .doc.tpl19 table.items td{ border:1px solid #ccc; }
+.doc.tpl19 table.items th{ background:#f2f4f7; font-size:11px; color:var(--ac); }
+.doc.tpl19 .d-rule{ border-top:2px solid var(--ac); }
+.doc.tpl19 .tot-row.grand{ border-top:2px solid var(--ac); color:var(--ac); }
+.doc.tpl19 .d-sign{ margin-top:26px; }
+/* tpl20 — 高級極簡 Premium (ref: bold name, minimal premium) */
+.doc.tpl20{ --ac:#111; background:#fafafa; }
+.doc.tpl20 .d-head{ align-items:flex-start; }
+.doc.tpl20 .seller-name{ font-size:30px; font-weight:800; letter-spacing:-1px; line-height:1.15; }
+.doc.tpl20 .doc-type{ font-size:17px; letter-spacing:5px; font-weight:400; text-align:right; }
+.doc.tpl20 .d-meta{ text-align:right; }
+.doc.tpl20 .d-rule{ border-top:1px solid #111; }
+.doc.tpl20 table.items th{ font-size:11px; letter-spacing:1px; border-bottom:1px solid #111; font-weight:700; }
+.doc.tpl20 table.items td{ border-bottom:1px solid #e8e8e8; }
+.doc.tpl20 .d-totals{ border-top:1px solid #111; margin-top:18px; padding-top:8px; }
+.doc.tpl20 .tot-row.grand{ border:0; font-size:18px; }
+.doc.tpl20 .billto .cap{ letter-spacing:3px; }
+/* tpl21 — 深藍中文 Navy (ref: dark navy header, Chinese quotation) */
+.doc.tpl21{ --ac:#0a1628; }
+.doc.tpl21 .d-head{ background:var(--ac); margin:-56px -60px 0; padding:34px 60px 30px; color:#fff; }
+.doc.tpl21 .seller-name{ color:#fff; font-size:20px; }
+.doc.tpl21 .seller-contact{ color:#9fb0c8; font-size:11px; }
+.doc.tpl21 .logo-box{ border-color:#3a4a63; color:#5a6d8a; }
+.doc.tpl21 .doc-type{ color:#fff; font-size:30px; letter-spacing:6px; }
+.doc.tpl21 .meta-table td.k{ color:#9fb0c8; }
+.doc.tpl21 .meta-table td.v{ color:#fff; }
+.doc.tpl21 .d-rule{ display:none; }
+.doc.tpl21 .billto{ margin-top:22px; }
+.doc.tpl21 table.items th{ background:var(--ac); color:#fff; border:0; font-size:12px; letter-spacing:2px; }
+.doc.tpl21 table.items td{ border-bottom:1px solid #e2e8f0; }
+.doc.tpl21 .tot-box{ min-width:300px; }
+.doc.tpl21 .tot-row.grand{ border-top:2px solid var(--ac); font-size:19px; }
+.doc.tpl21 .d-sign{ margin-top:30px; }
 /* print */
 @media print{
   body{ background:#fff; }
@@ -342,9 +456,12 @@ const DOCNAME={quotation:{zh:'報價單',en:'QUOTATION'},invoice:{zh:'發票',en
 const docName=()=>{const d=DOCNAME[doc.type];return doc.lang==='zh'?d.zh:doc.lang==='en'?d.en:d.en+' '+d.zh;};
 /* ---- templates ---- */
 const TPLS=[
- {n:'經典深藍 Classic',c:1},{n:'極簡 Minimal',c:2},{n:'活力色帶 Stripe',c:3},{n:'典雅金 Gold',c:4},
- {n:'企業藍 Corporate',c:5},{n:'網格 Grid',c:6},{n:'柔和 Soft',c:7},{n:'暗黑 Noir',c:8},
- {n:'葡式花磚 Azulejo',c:9},{n:'緊湊 Compact',c:10},{n:'創意 Studio',c:11},{n:'正式公函 Formal',c:12},
+ {n:'活力色帶 Stripe',c:3},{n:'典雅金 Gold',c:4},
+ {n:'企業藍 Corporate',c:5},{n:'柔和 Soft',c:7},{n:'暗黑 Noir',c:8},
+ {n:'葡式花磚 Azulejo',c:9},{n:'創意 Studio',c:11},
+ {n:'極簡收據 Receipt',c:13},{n:'藍調現代 Fidèle',c:14},{n:'編輯體 Editorial',c:15},
+ {n:'粗黑體 Bold',c:16},{n:'歐式正式 Euro',c:17},{n:'螢光綠 Acid',c:18},
+ {n:'經典商務 Biz',c:19},{n:'高級極簡 Premium',c:20},{n:'深藍中文 Navy',c:21},
 ];
 /* ---- doc model ---- */
 const today=()=>new Date().toISOString().slice(0,10);
