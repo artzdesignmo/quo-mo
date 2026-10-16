@@ -6,6 +6,7 @@
 <title>Quo-mo — 澳門商業單據工作室</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root{
   --bg:#e8e8e6; --panel:#f7f7f5; --card:#ffffff; --ink:#1c1c1e; --ink2:#6b6b6e;
@@ -394,7 +395,7 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 function renderDoc(){
  const c=doc.tpl, s=doc.seller, m=doc.meta, f=doc.fmt||{};
  const sellerName=doc.lang==='en'?esc(s.name_en):doc.lang==='zh'?esc(s.name_zh):esc(s.name_zh)+'<br>'+esc(s.name_en);
- const contact=[esc(s.addr),'T: '+esc(s.phone),esc(s.email)].filter(x=>x&&x!=='T: ').join('<br>');
+ const contact=['T: '+esc(s.phone),esc(s.email),esc(s.addr)].filter(x=>x&&x!=='T: ').join('<br>');
  const band=c===3?'<div class="band"></div>':'';
  const tile=c===9?'<div class="tile"></div>':'';
  // format overrides
@@ -427,8 +428,9 @@ function renderDoc(){
    (doc.pay.accname?'<div class="ln">'+L('accname')+': '+esc(doc.pay.accname)+'</div>':'')+
    (doc.pay.accno?'<div class="ln">'+L('accno')+': '+esc(doc.pay.accno)+'</div>':'')+
    (doc.pay.cheque?'<div class="ln">'+L('cheque')+': '+esc(doc.pay.cheque)+'</div>':'')+'</div>':'')+
-  '<div class="d-sign"><div class="sign-box"><div class="sign-line">'+(doc.signName?esc(doc.signName):'')+'</div></div>'+
-  (doc.showChop?'<div class="sign-box"><div class="chop">公司蓋章<br>CHOP</div><div class="sign-line" style="margin-top:8px">'+L('sign')+'</div></div>':'')+
+  '<div class="d-sign"><div class="sign-box" style="text-align:center">'+
+  (doc.showChop?'<div class="chop">公司蓋章<br>CHOP</div>':'')+
+  '<div style="font-size:11px;color:#666;margin-top:10px">'+L('sign')+(doc.signName?'<br>'+esc(doc.signName):'')+'</div></div>'+
   '<div class="sign-box"><div class="sign-line">'+(doc.lang==='zh'?'客戶簽署':doc.lang==='en'?'Client Signature':'客戶簽署 Client')+'</div></div></div>'+
   (doc.rmk?'<div class="d-rmk"><div class="cap">'+L('rmk')+'</div><div class="tx">'+esc(doc.rmk)+'</div></div>':'');
  const cls='doc tpl'+c+fontCls+tposCls;
@@ -533,7 +535,7 @@ function standaloneHTML(){
  return '<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;background:#fff}'+docStyles()+'</style></head><body>'+renderDoc()+'</body></html>';
 }
 function download(url,name){const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();}
-function exportImg(type){
+function exportImgLegacy(type){
  const svg='<svg xmlns="http://www.w3.org/2000/svg" width="794" height="1123" viewBox="0 0 794 1123"><foreignObject width="794" height="1123">'+
   '<div xmlns="http://www.w3.org/1999/xhtml" style="width:794px;height:1123px">'+standaloneHTML().replace(/<!DOCTYPE html>|<\/?html>|<\/?head>|<meta[^>]*>|<\/?body>/g,'')+'</div></foreignObject></svg>';
  const url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml;charset=utf-8'}));
@@ -545,6 +547,16 @@ function exportImg(type){
   if(type==='jpg')download(cv.toDataURL('image/jpeg',0.92),name);else cv.toBlob(b=>download(URL.createObjectURL(b),name),'image/png');};
  img.onerror=()=>alert('Export failed, please try Print/PDF');
  img.src=url;
+}
+function exportImg(type){
+ const name='quomo-'+doc.type+'-'+doc.meta.no+'.'+type;
+ const el=document.querySelector('#preview .doc');
+ if(window.html2canvas&&el){
+  html2canvas(el,{scale:2,backgroundColor:'#ffffff',useCORS:true,logging:false}).then(cv=>{
+   if(type==='jpg')download(cv.toDataURL('image/jpeg',0.92),name);
+   else cv.toBlob(b=>{if(b)download(URL.createObjectURL(b),name);else exportImgLegacy(type);},'image/png');
+  }).catch(()=>exportImgLegacy(type));
+ }else exportImgLegacy(type);
 }
 $('bPng').onclick=()=>exportImg('png');
 $('bJpg').onclick=()=>exportImg('jpg');
