@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { FolderOpen, HardDrive, Upload, Download, Plus, X } from 'lucide-react';
 import type { SavedDocument } from '../../types/doc';
 import { fileLabel, styleNameOf } from '../../lib/documents';
+import { getDict, type Lang } from '../../i18n';
 
 type Props = {
+  lang: Lang;
   open: boolean;
   files: SavedDocument[];
   activeFileId: string | null;
@@ -33,6 +35,7 @@ function formatSavedAt(iso: string): string {
 }
 
 export default function LibraryPanel({
+  lang,
   open,
   files,
   activeFileId,
@@ -55,16 +58,18 @@ export default function LibraryPanel({
     if (open) setName(currentName);
   }, [open, currentName]);
 
+  const t = getDict(lang);
+
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-40 flex justify-end">
-      <button type="button" className="flex-1 bg-black/25" aria-label="關閉文件庫" onClick={onClose} />
+      <button type="button" className="flex-1 bg-black/25" aria-label={t.closeLibrary} onClick={onClose} />
       <aside className="w-full max-w-md h-full bg-[#efefef] border-l border-neutral-300 shadow-2xl overflow-y-auto">
         <div className="sticky top-0 z-10 bg-[#efefef] border-b border-neutral-300 px-5 py-4 flex items-center justify-between">
           <div>
-            <div className="text-[11px] tracking-[0.16em] uppercase text-neutral-500">文件庫</div>
-            <div className="text-lg text-neutral-900">儲存與再開</div>
+            <div className="text-[11px] tracking-[0.16em] uppercase text-neutral-500">{t.library}</div>
+            <div className="text-lg text-neutral-900">{t.saveAndReopen}</div>
           </div>
           <button type="button" onClick={onClose} className="p-1.5 rounded-lg hover:bg-white">
             <X className="w-4 h-4" />
@@ -74,11 +79,11 @@ export default function LibraryPanel({
         <div className="p-5 space-y-6">
           <section className="rounded-xl border border-neutral-300 bg-white p-4 space-y-3">
             <label className="block">
-              <div className="text-[11px] text-neutral-500 mb-1.5">此份名稱</div>
+              <div className="text-[11px] text-neutral-500 mb-1.5">{t.thisDocName}</div>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="例如：議事亭咖啡 品牌識別"
+                placeholder={t.docNamePlaceholder}
                 className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-[13px] bg-[#fafafa]"
               />
             </label>
@@ -88,14 +93,14 @@ export default function LibraryPanel({
                 onClick={() => onSave(name)}
                 className="rounded-lg bg-neutral-900 text-white px-3 py-2 text-[13px]"
               >
-                {activeFileId ? '儲存' : '存成文件'}
+                {activeFileId ? t.save : t.saveDoc}
               </button>
               <button
                 type="button"
                 onClick={() => onSaveAs(name)}
                 className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-[13px]"
               >
-                另存新檔
+                {t.saveAsNew}
               </button>
             </div>
             <button
@@ -104,15 +109,15 @@ export default function LibraryPanel({
               className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-neutral-400 px-3 py-2 text-[12px] text-neutral-700"
             >
               <Plus className="w-3.5 h-3.5" />
-              開新單據（保留發出方）
+              {t.newDocKeepIssuer}
             </button>
           </section>
 
           <section>
-            <div className="text-[12px] tracking-[0.14em] uppercase text-neutral-500 mb-2">已存單據</div>
+            <div className="text-[12px] tracking-[0.14em] uppercase text-neutral-500 mb-2">{t.savedDocs}</div>
             {files.length === 0 ? (
               <p className="text-[13px] text-neutral-500 leading-relaxed">
-                還沒有存過。填好內容後按「存成文件」，之後可從這裡打開繼續改。
+                {t.noSavedYet}
               </p>
             ) : (
               <div className="space-y-2">
@@ -129,15 +134,15 @@ export default function LibraryPanel({
                         <button type="button" className="text-left min-w-0 flex-1" onClick={() => onOpen(item.id)}>
                           <div className="text-[13px] font-medium truncate">{fileLabel(item)}</div>
                           <div className="text-[11px] text-neutral-500 mt-0.5">
-                            {styleNameOf(item.styleId)} · {item.data.buyer.name || '未填客戶'} · {formatSavedAt(item.savedAt)}
+                            {styleNameOf(item.styleId)} · {item.data.buyer.name || t.noClient} · {formatSavedAt(item.savedAt)}
                           </div>
                         </button>
                         <div className="flex gap-2 shrink-0">
                           <button type="button" className="text-[11px] text-neutral-800" onClick={() => onOpen(item.id)}>
-                            打開
+                            {t.open}
                           </button>
                           <button type="button" className="text-[11px] text-red-600" onClick={() => onDelete(item.id)}>
-                            刪除
+                            {t.delete}
                           </button>
                         </div>
                       </div>
@@ -149,18 +154,18 @@ export default function LibraryPanel({
           </section>
 
           <section className="rounded-xl border border-neutral-300 bg-white p-4 space-y-3">
-            <div className="text-[12px] tracking-[0.14em] uppercase text-neutral-500">儲存位置</div>
+            <div className="text-[12px] tracking-[0.14em] uppercase text-neutral-500">{t.saveLocation}</div>
             <p className="text-[13px] text-neutral-600 leading-relaxed">
-              按儲存會記下已選模版與已填內容，之後可打開繼續改。預設存在這台電腦的瀏覽器；也可另存檔案，或同步到 Google Drive 資料夾。
+              {t.saveLocationHint}
             </p>
             {folderName ? (
               <div className="rounded-lg bg-[#f4f4f4] px-3 py-2 text-[12px] text-neutral-800">
-                已同步資料夾：{folderName}
+                {t.syncedFolder}：{folderName}
               </div>
             ) : (
               <div className="inline-flex items-center gap-1.5 text-[12px] text-neutral-500">
                 <HardDrive className="w-3.5 h-3.5" />
-                目前：本機瀏覽器
+                {t.currentBrowser}
               </div>
             )}
             <div className="grid grid-cols-2 gap-2">
@@ -170,18 +175,18 @@ export default function LibraryPanel({
                 className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-neutral-900 text-white px-3 py-2 text-[13px]"
               >
                 <Download className="w-3.5 h-3.5" />
-                存到本機
+                {t.saveToLocal}
               </button>
               <label
                 htmlFor="macau-docs-open-file"
                 className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-neutral-900 bg-white px-3 py-2 text-[13px] cursor-pointer"
               >
                 <Upload className="w-3.5 h-3.5" />
-                打開本機檔案
+                {t.openLocalFile}
               </label>
             </div>
             <p className="text-[12px] text-neutral-500 leading-relaxed">
-              桌面上若是 0 KB 的空檔，請不要選它。請再按「存到本機」，然後打開下載資料夾裡的 JSON。
+              {t.emptyFileHint}
             </p>
             {folderSupported ? (
               <div className="flex gap-2">
@@ -191,17 +196,17 @@ export default function LibraryPanel({
                   className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-neutral-300 px-3 py-2 text-[12px]"
                 >
                   <FolderOpen className="w-3.5 h-3.5" />
-                  {folderName ? '更換 Drive／本機資料夾' : '同步 Google Drive 或本機資料夾'}
+                  {folderName ? t.changeDriveFolder : t.syncDriveHint}
                 </button>
                 {folderName && (
                   <button type="button" onClick={onForgetFolder} className="rounded-lg px-3 py-2 text-[12px] text-neutral-600">
-                    取消
+                    {t.cancel}
                   </button>
                 )}
               </div>
             ) : (
               <p className="text-[12px] text-neutral-500 leading-relaxed">
-                此瀏覽器不能直接選資料夾。請用「存到本機」，再把 JSON 放進 Google Drive。
+                {t.noFolderSupport}
               </p>
             )}
           </section>
