@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { FONT_PRESET_LABEL, LAYOUT_LABEL } from '../../data/styles';
 import type { LayoutCustom, SavedFormat } from '../../types/doc';
+import { getDict, type Lang } from '../../i18n';
 
 type Props = {
+  lang: Lang;
   custom: LayoutCustom;
   onChange: (next: LayoutCustom) => void;
   open: boolean;
@@ -16,6 +18,7 @@ const ACCENTS = ['#2563eb', '#1e3a8a', '#047857', '#e11d48', '#dc2626', '#111827
 const PAPERS = ['#ffffff', '#fafafa', '#f8fafc', '#fffbeb', '#111111'];
 
 export default function CustomizePanel({
+  lang,
   custom,
   onChange,
   open,
@@ -25,6 +28,7 @@ export default function CustomizePanel({
   onDeleteFormat,
 }: Props) {
   const [name, setName] = useState('');
+  const t = getDict(lang);
   if (!open) return null;
 
   const set = <K extends keyof LayoutCustom>(key: K, value: LayoutCustom[K]) => {
@@ -33,10 +37,10 @@ export default function CustomizePanel({
 
   return (
     <div className="rounded-xl border border-neutral-300 bg-white p-4 space-y-4 mb-4">
-      <div className="text-[12px] tracking-[0.14em] uppercase text-neutral-500">自定義排版</div>
+      <div className="text-[12px] tracking-[0.14em] uppercase text-neutral-500">{t.customLayout}</div>
 
       <div>
-        <div className="text-[11px] text-neutral-500 mb-2">版式骨架</div>
+        <div className="text-[11px] text-neutral-500 mb-2">{t.layoutSkeleton}</div>
         <div className="grid grid-cols-2 gap-2">
           {(Object.keys(LAYOUT_LABEL) as Array<LayoutCustom['layout']>).map((id) => (
             <button
@@ -54,7 +58,7 @@ export default function CustomizePanel({
       </div>
 
       <div>
-        <div className="text-[11px] text-neutral-500 mb-2">字體</div>
+        <div className="text-[11px] text-neutral-500 mb-2">{t.font}</div>
         <div className="grid grid-cols-2 gap-2">
           {(Object.keys(FONT_PRESET_LABEL) as Array<LayoutCustom['fontPreset']>).map((id) => (
             <button
@@ -72,12 +76,12 @@ export default function CustomizePanel({
       </div>
 
       <div>
-        <div className="text-[11px] text-neutral-500 mb-2">疏密度</div>
+        <div className="text-[11px] text-neutral-500 mb-2">{t.density}</div>
         <div className="flex gap-2">
           {([
-            ['compact', '緊湊'],
-            ['regular', '標準'],
-            ['airy', '疏朗'],
+            ['compact', t.compact],
+            ['regular', t.standard],
+            ['airy', t.airy],
           ] as const).map(([id, label]) => (
             <button
               key={id}
@@ -94,7 +98,7 @@ export default function CustomizePanel({
       </div>
 
       <div>
-        <div className="text-[11px] text-neutral-500 mb-2">主色</div>
+        <div className="text-[11px] text-neutral-500 mb-2">{t.accent}</div>
         <div className="flex flex-wrap gap-2">
           {ACCENTS.map((c) => (
             <button
@@ -116,7 +120,7 @@ export default function CustomizePanel({
       </div>
 
       <div>
-        <div className="text-[11px] text-neutral-500 mb-2">紙張色</div>
+        <div className="text-[11px] text-neutral-500 mb-2">{t.paperColor}</div>
         <div className="flex flex-wrap gap-2">
           {PAPERS.map((c) => (
             <button
@@ -138,12 +142,12 @@ export default function CustomizePanel({
       </div>
 
       <div>
-        <div className="text-[11px] text-neutral-500 mb-2">單據文字</div>
+        <div className="text-[11px] text-neutral-500 mb-2">{t.docText}</div>
         <div className="flex gap-2">
           {([
-            ['zh', '中文'],
-            ['en', '英文'],
-            ['both', '中英'],
+            ['zh', t.fontZh],
+            ['en', t.fontEn],
+            ['both', t.fontZhEn],
           ] as const).map(([id, label]) => (
             <button
               key={id}
@@ -159,24 +163,24 @@ export default function CustomizePanel({
         </div>
       </div>
       <label className="flex items-center justify-between text-[12px] text-neutral-700">
-        顯示印章欄
+        {t.showChopField}
         <input type="checkbox" checked={custom.showChop} onChange={(e) => set('showChop', e.target.checked)} />
       </label>
       <label className="flex items-center justify-between text-[12px] text-neutral-700">
-        顯示金額大寫
+        {t.showAmountWords}
         <input type="checkbox" checked={custom.showChineseAmount} onChange={(e) => set('showChineseAmount', e.target.checked)} />
       </label>
       <label className="flex items-center justify-between text-[12px] text-neutral-700">
-        顯示報價有效期
+        {t.showValidUntil}
         <input type="checkbox" checked={custom.showValidUntil} onChange={(e) => set('showValidUntil', e.target.checked)} />
       </label>
 
       <div className="border-t border-neutral-200 pt-3 space-y-2">
-        <div className="text-[11px] text-neutral-500">儲存此格式，下次直接套用</div>
+        <div className="text-[11px] text-neutral-500">{t.saveThisFormat}</div>
         <div className="flex gap-2">
           <input
             className="flex-1 rounded-lg bg-neutral-50 border border-neutral-300 px-3 py-2 text-[13px] outline-none focus:border-neutral-800"
-            placeholder="例如：公司常用藍"
+            placeholder={t.accentPlaceholder}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -188,7 +192,7 @@ export default function CustomizePanel({
             }}
             className="rounded-lg bg-neutral-900 text-white px-3 py-2 text-[12px] whitespace-nowrap"
           >
-            儲存
+            {t.save}
           </button>
         </div>
         {formats.length > 0 && (
@@ -197,10 +201,10 @@ export default function CustomizePanel({
               <li key={item.id} className="flex items-center gap-2 rounded-lg border border-neutral-200 px-2 py-1.5">
                 <span className="flex-1 truncate text-[12px]">{item.name}</span>
                 <button type="button" className="text-[11px] text-neutral-800" onClick={() => onApplyFormat(item.id)}>
-                  套用
+                  {t.apply}
                 </button>
                 <button type="button" className="text-[11px] text-red-600" onClick={() => onDeleteFormat(item.id)}>
-                  刪除
+                  {t.delete}
                 </button>
               </li>
             ))}
