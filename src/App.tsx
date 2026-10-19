@@ -449,7 +449,7 @@ export default function App() {
         <div className="max-w-[1600px] mx-auto px-5 h-16 flex items-center justify-between gap-4">
           <button type="button" onClick={() => setStep('gallery')} className="text-left">
             <div className="text-[10px] tracking-[0.24em] uppercase text-neutral-500">Macau SAR</div>
-            <div className="font-medium tracking-wide">澳門單據</div>
+            <div className="quo-mark text-[20px]">Quo-Mo</div>
           </button>
           <div className="hidden md:block text-[12px] text-neutral-500">
             電子報價單 · 發票 · 收據　同一風格成套輸出
