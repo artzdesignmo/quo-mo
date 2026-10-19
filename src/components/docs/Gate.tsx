@@ -34,11 +34,11 @@ export default function Gate({ onUnlock }: Props) {
         Quo-Mo
       </h1>
       <p className="mt-6 text-[13px] tracking-[0.18em] uppercase text-neutral-500">
-        僅限管理員登入
+        ADMIN ONLY
       </p>
       <form onSubmit={submit} className="mt-10 w-full max-w-sm space-y-3">
         <label className="block">
-          <span className="sr-only">管理員密碼</span>
+          <span className="sr-only">Admin password</span>
           <input
             ref={inputRef}
             type="password"
@@ -49,18 +49,18 @@ export default function Gate({ onUnlock }: Props) {
               setPassword(e.target.value);
               if (error) setError(false);
             }}
-            placeholder="密碼"
+            placeholder="Password"
             className={`w-full rounded-2xl border bg-white px-5 py-3.5 text-center text-[18px] tracking-[0.32em] outline-none ${
               error ? 'border-red-500' : 'border-neutral-300 focus:border-neutral-900'
             }`}
           />
         </label>
-        {error && <p className="text-center text-[13px] text-red-600">密碼不正確</p>}
+        {error && <p className="text-center text-[13px] text-red-600">Incorrect password</p>}
         <button
           type="submit"
           className="w-full rounded-2xl bg-neutral-900 px-5 py-3.5 text-[14px] text-white"
         >
-          進入
+          Enter
         </button>
       </form>
     </div>
