@@ -29,7 +29,9 @@ export default function Gate({ onUnlock }: Props) {
   return (
     <div className="min-h-screen bg-[#e6e6e6] text-neutral-900 flex flex-col items-center justify-center px-6">
       <h1 className="quo-mark text-center text-[42px] sm:text-[64px] md:text-[88px] text-neutral-900 max-w-[16ch]">
-        Wellcome Quo-Mo
+        Wellcome
+        <br />
+        Quo-Mo
       </h1>
       <p className="mt-6 text-[13px] tracking-[0.18em] uppercase text-neutral-500">
         僅限管理員登入
