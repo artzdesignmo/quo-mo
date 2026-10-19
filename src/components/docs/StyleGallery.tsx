@@ -3,8 +3,10 @@ import { createDefaultDoc } from '../../data/defaults';
 import type { LayoutCustom, SavedDocument, SavedFormat, StyleId } from '../../types/doc';
 import { fileLabel, styleNameOf } from '../../lib/documents';
 import DocumentSheet from './DocumentSheet';
+import { getDict, type Lang } from '../../i18n';
 
 type Props = {
+  lang: Lang;
   selected: StyleId | null;
   custom: LayoutCustom;
   onSelect: (id: StyleId) => void;
@@ -22,6 +24,7 @@ type Props = {
 const previewDoc = createDefaultDoc();
 
 export default function StyleGallery({
+  lang,
   selected,
   custom,
   onSelect,
@@ -35,13 +38,14 @@ export default function StyleGallery({
   onOpenFile,
   onDeleteFile,
 }: Props) {
+  const t = getDict(lang);
   return (
     <div className="space-y-10">
       {files.length > 0 && (
         <section>
           <div className="mb-4">
-            <h2 className="text-lg text-neutral-900">已存單據</h2>
-            <p className="text-[13px] text-neutral-500 mt-1">打開後可繼續改內容、換風格，再輸出 JPG 或 PDF。</p>
+            <h2 className="text-lg text-neutral-900">{t.savedDocs}</h2>
+            <p className="text-[13px] text-neutral-500 mt-1">{t.openSavedDocHint}</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
             {files.map((item) => {
@@ -56,14 +60,14 @@ export default function StyleGallery({
                   <button type="button" className="flex-1 text-left min-w-0" onClick={() => onOpenFile(item.id)}>
                     <div className="font-medium truncate">{fileLabel(item)}</div>
                     <div className="text-[11px] text-neutral-500 mt-0.5 truncate">
-                      {styleNameOf(item.styleId)} · {item.data.buyer.name || '未填客戶'}
+                      {styleNameOf(item.styleId)} · {item.data.buyer.name || t.noClient}
                     </div>
                   </button>
                   <button type="button" className="text-[11px] text-neutral-800" onClick={() => onOpenFile(item.id)}>
-                    打開
+                    {t.open}
                   </button>
                   <button type="button" className="text-[11px] text-red-600" onClick={() => onDeleteFile(item.id)}>
-                    刪除
+                    {t.delete}
                   </button>
                 </div>
               );
@@ -74,8 +78,8 @@ export default function StyleGallery({
       {formats.length > 0 && (
         <section>
           <div className="mb-4">
-            <h2 className="text-lg text-neutral-900">已儲存格式</h2>
-            <p className="text-[13px] text-neutral-500 mt-1">下次直接套用你調好的排版、主色與顯示項目。</p>
+            <h2 className="text-lg text-neutral-900">{t.savedFormats}</h2>
+            <p className="text-[13px] text-neutral-500 mt-1">{t.applySavedFormatHint}</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
             {formats.map((item) => {
@@ -93,10 +97,10 @@ export default function StyleGallery({
                     <div className="text-[11px] text-neutral-500 mt-0.5">{meta?.name || item.styleId}</div>
                   </button>
                   <button type="button" className="text-[11px] text-neutral-800" onClick={() => onApplyFormat(item.id)}>
-                    套用
+                    {t.apply}
                   </button>
                   <button type="button" className="text-[11px] text-red-600" onClick={() => onDeleteFormat(item.id)}>
-                    刪除
+                    {t.delete}
                   </button>
                 </div>
               );
@@ -106,7 +110,7 @@ export default function StyleGallery({
       )}
 
       <section>
-        <p className="text-[13px] text-neutral-500 mb-4">單擊選取，雙擊進入填寫。</p>
+        <p className="text-[13px] text-neutral-500 mb-4">{t.clickToSelect}</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
           {STYLE_LIST.map((style) => {
             const active = selected === style.id && !appliedFormatId;
