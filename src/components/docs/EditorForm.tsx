@@ -4,8 +4,10 @@ import { ChevronDown, ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Minus, Plus, Tr
 import { emptyItem } from '../../data/defaults';
 import { addDaysISO, computeTotals, formatMoney, INVOICE_DUE_DAYS, PAYMENT_METHODS, QUOTE_VALID_DAYS } from '../../lib/money';
 import type { DocData, Party } from '../../types/doc';
+import { getDict, type Lang } from '../../i18n';
 
 type Props = {
+  lang: Lang;
   data: DocData;
   onChange: (next: DocData) => void;
 };
@@ -155,24 +157,27 @@ function Collapsible({
 }
 
 function PartyFields({
+  lang,
   party,
   extra,
   onChange,
 }: {
+  lang: Lang;
   party: Party;
   extra?: boolean;
   onChange: (next: Party) => void;
 }) {
+  const t = getDict(lang);
   const set = (key: keyof Party, value: string) => onChange({ ...party, [key]: value });
   return (
     <>
-      <Field label="名稱">
+      <Field label={t.name}>
         <input className={inputClass} value={party.name} onChange={(e) => set('name', e.target.value)} />
       </Field>
-      <Field label="外文名稱">
+      <Field label={t.foreignName}>
         <input className={inputClass} value={party.nameSecondary} onChange={(e) => set('nameSecondary', e.target.value)} />
       </Field>
-      <Field label="地址">
+      <Field label={t.address}>
         <textarea
           className={`${inputClass} min-h-[64px] resize-y`}
           value={party.address}
@@ -180,19 +185,19 @@ function PartyFields({
         />
       </Field>
       <div className="grid grid-cols-2 gap-2">
-        <Field label="電話">
+        <Field label={t.phone}>
           <input className={inputClass} value={party.phone} onChange={(e) => set('phone', e.target.value)} />
         </Field>
-        <Field label="電郵">
+        <Field label={t.email}>
           <input className={inputClass} value={party.email} onChange={(e) => set('email', e.target.value)} />
         </Field>
       </div>
       {extra && (
         <div className="grid grid-cols-2 gap-2">
-          <Field label="商業登記編號">
+          <Field label={t.brNumber}>
             <input className={inputClass} value={party.registrationNo} onChange={(e) => set('registrationNo', e.target.value)} />
           </Field>
-          <Field label="納稅人編號">
+          <Field label={t.taxNumber}>
             <input className={inputClass} value={party.taxNo} onChange={(e) => set('taxNo', e.target.value)} />
           </Field>
         </div>
@@ -210,7 +215,8 @@ function readFile(file: File): Promise<string> {
   });
 }
 
-export default function EditorForm({ data, onChange }: Props) {
+export default function EditorForm({ lang, data, onChange }: Props) {
+  const t = getDict(lang);
   const totals = computeTotals(data.items, data.discount, data.discountType, data.taxRate);
   const set = <K extends keyof DocData>(key: K, value: DocData[K]) => onChange({ ...data, [key]: value });
 
@@ -223,10 +229,10 @@ export default function EditorForm({ data, onChange }: Props) {
 
   return (
     <div className="space-y-5 pb-16">
-      <Collapsible title="發出方" summary={data.seller.name}>
-        <PartyFields extra party={data.seller} onChange={(seller) => set('seller', seller)} />
+      <Collapsible title={t.issuer} summary={data.seller.name}>
+        <PartyFields lang={lang} extra party={data.seller} onChange={(seller) => set('seller', seller)} />
         <div className="space-y-2 pt-1">
-          <Field label="標誌">
+          <Field label={t.logo}>
             {data.logoDataUrl ? (
               <div className="rounded-lg border border-neutral-300 bg-neutral-50 p-2 space-y-2">
                 <div className="flex items-center justify-between gap-2">
@@ -245,7 +251,7 @@ export default function EditorForm({ data, onChange }: Props) {
                     className="inline-flex items-center gap-1 text-[12px] text-neutral-600 hover:text-red-600"
                   >
                     <X className="w-3.5 h-3.5" />
-                    取消
+                    {t.cancel}
                   </button>
                 </div>
                 <div className="flex items-center gap-2">
@@ -253,7 +259,7 @@ export default function EditorForm({ data, onChange }: Props) {
                     type="button"
                     className="rounded border border-neutral-300 p-1"
                     onClick={() => set('logoScale', Math.max(50, (data.logoScale || 100) - 10))}
-                    aria-label="縮小標誌"
+                    aria-label={t.shrinkLogo}
                   >
                     <Minus className="w-3.5 h-3.5" />
                   </button>
@@ -270,7 +276,7 @@ export default function EditorForm({ data, onChange }: Props) {
                     type="button"
                     className="rounded border border-neutral-300 p-1"
                     onClick={() => set('logoScale', Math.min(220, (data.logoScale || 100) + 10))}
-                    aria-label="放大標誌"
+                    aria-label={t.enlargeLogo}
                   >
                     <Plus className="w-3.5 h-3.5" />
                   </button>
@@ -280,7 +286,7 @@ export default function EditorForm({ data, onChange }: Props) {
             ) : (
               <label className={`${inputClass} flex items-center gap-2 cursor-pointer`}>
                 <Upload className="w-3.5 h-3.5" />
-                <span className="truncate">上傳標誌</span>
+                <span className="truncate">{t.uploadLogo}</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -294,7 +300,7 @@ export default function EditorForm({ data, onChange }: Props) {
               </label>
             )}
           </Field>
-          <Field label="印章">
+          <Field label={t.chop}>
             <div className="rounded-lg border border-neutral-300 bg-neutral-50 p-2 space-y-2">
               {data.chopDataUrl ? (
                 <div className="flex items-center justify-between gap-2">
@@ -313,13 +319,13 @@ export default function EditorForm({ data, onChange }: Props) {
                     className="inline-flex items-center gap-1 text-[12px] text-neutral-600 hover:text-red-600"
                   >
                     <X className="w-3.5 h-3.5" />
-                    取消
+                    {t.cancel}
                   </button>
                 </div>
               ) : (
                 <label className={`${inputClass} flex items-center gap-2 cursor-pointer`}>
                   <Upload className="w-3.5 h-3.5" />
-                  <span className="truncate">上傳印章</span>
+                  <span className="truncate">{t.uploadChop}</span>
                   <input
                     type="file"
                     accept="image/*"
@@ -364,7 +370,7 @@ export default function EditorForm({ data, onChange }: Props) {
                     type="button"
                     className="rounded border border-neutral-300 p-1 flex justify-center"
                     onClick={() => set('chopY', Math.max(-80, (data.chopY || 0) - 4))}
-                    aria-label="上移印章"
+                    aria-label={t.moveChopUp}
                   >
                     <ArrowUp className="w-3.5 h-3.5" />
                   </button>
@@ -373,7 +379,7 @@ export default function EditorForm({ data, onChange }: Props) {
                     type="button"
                     className="rounded border border-neutral-300 p-1 flex justify-center"
                     onClick={() => set('chopX', Math.max(-80, (data.chopX || 0) - 4))}
-                    aria-label="左移印章"
+                    aria-label={t.moveChopLeft}
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
                   </button>
@@ -382,13 +388,13 @@ export default function EditorForm({ data, onChange }: Props) {
                     className="rounded border border-neutral-300 text-[10px] text-neutral-500"
                     onClick={() => onChange({ ...data, chopX: 0, chopY: 0 })}
                   >
-                    置中
+                    {t.center}
                   </button>
                   <button
                     type="button"
                     className="rounded border border-neutral-300 p-1 flex justify-center"
                     onClick={() => set('chopX', Math.min(80, (data.chopX || 0) + 4))}
-                    aria-label="右移印章"
+                    aria-label={t.moveChopRight}
                   >
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
@@ -397,7 +403,7 @@ export default function EditorForm({ data, onChange }: Props) {
                     type="button"
                     className="rounded border border-neutral-300 p-1 flex justify-center"
                     onClick={() => set('chopY', Math.min(80, (data.chopY || 0) + 4))}
-                    aria-label="下移印章"
+                    aria-label={t.moveChopDown}
                   >
                     <ArrowDown className="w-3.5 h-3.5" />
                   </button>
@@ -412,24 +418,24 @@ export default function EditorForm({ data, onChange }: Props) {
         </div>
       </Collapsible>
 
-      <Collapsible title="客戶" summary={data.buyer.name}>
-        <PartyFields party={data.buyer} onChange={(buyer) => set('buyer', buyer)} />
+      <Collapsible title={t.client} summary={data.buyer.name}>
+        <PartyFields lang={lang} party={data.buyer} onChange={(buyer) => set('buyer', buyer)} />
       </Collapsible>
 
       <div className="space-y-2">
-        <div className="text-[12px] tracking-[0.14em] uppercase text-neutral-500">單據資料</div>
+        <div className="text-[12px] tracking-[0.14em] uppercase text-neutral-500">{t.docInfo}</div>
         <div className="grid grid-cols-2 gap-2">
-          <Field label="系列編號">
+          <Field label={t.seriesNumber}>
             <input className={inputClass} value={data.seriesId} onChange={(e) => set('seriesId', e.target.value)} />
           </Field>
-          <Field label="貨幣">
+          <Field label={t.currency}>
             <select className={inputClass} value={data.currency} onChange={(e) => set('currency', e.target.value as DocData['currency'])}>
-              <option value="MOP">MOP 澳門元</option>
-              <option value="HKD">HKD 港幣</option>
-              <option value="CNY">CNY 人民幣</option>
+              <option value="MOP">{t.mop}</option>
+              <option value="HKD">{t.hkd}</option>
+              <option value="CNY">{t.cny}</option>
             </select>
           </Field>
-          <Field label="發出日期">
+          <Field label={t.issueDate}>
             <input
               type="date"
               className={inputClass}
@@ -445,16 +451,16 @@ export default function EditorForm({ data, onChange }: Props) {
               }}
             />
           </Field>
-          <Field label="報價有效期">
+          <Field label={t.quoteValidUntil}>
             <input type="date" className={inputClass} value={data.validUntil} onChange={(e) => set('validUntil', e.target.value)} />
           </Field>
-          <Field label="發票付款期限">
+          <Field label={t.invoiceDue}>
             <input type="date" className={inputClass} value={data.dueDate} onChange={(e) => set('dueDate', e.target.value)} />
           </Field>
-          <Field label="收據收款方式">
+          <Field label={t.receiptPayMethod}>
             <select
               className={inputClass}
-              value={PAYMENT_METHODS.includes(data.paymentMethod as (typeof PAYMENT_METHODS)[number]) ? data.paymentMethod : '銀行轉賬'}
+              value={PAYMENT_METHODS.includes(data.paymentMethod as (typeof PAYMENT_METHODS)[number]) ? data.paymentMethod : t.bankTransfer}
               onChange={(e) => set('paymentMethod', e.target.value)}
             >
               {PAYMENT_METHODS.map((method) => (
@@ -467,14 +473,14 @@ export default function EditorForm({ data, onChange }: Props) {
 
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <div className="text-[12px] tracking-[0.14em] uppercase text-neutral-500">項目明細</div>
+          <div className="text-[12px] tracking-[0.14em] uppercase text-neutral-500">{t.items}</div>
           <button
             type="button"
             onClick={() => set('items', [...data.items, emptyItem()])}
             className="text-[12px] text-neutral-800 inline-flex items-center gap-1"
           >
             <Plus className="w-3.5 h-3.5" />
-            新增項目
+            {t.addItem}
           </button>
         </div>
         {data.items.map((item, index) => (
@@ -492,7 +498,7 @@ export default function EditorForm({ data, onChange }: Props) {
             </div>
             <input
               className={inputClass}
-              placeholder="項目說明"
+              placeholder={t.itemDesc}
               value={item.description}
               onChange={(e) => updateItem(item.id, { description: e.target.value })}
             />
@@ -501,7 +507,7 @@ export default function EditorForm({ data, onChange }: Props) {
                 <div key={`${item.id}-d-${detailIndex}`} className="flex items-center gap-2">
                   <input
                     className={`${inputClass} text-[12px] py-1.5`}
-                    placeholder="細項（單上以小字顯示）"
+                    placeholder="{t.subItemNote}"
                     value={row}
                     onChange={(e) => {
                       const next = [...(item.details || [])];
@@ -517,7 +523,7 @@ export default function EditorForm({ data, onChange }: Props) {
                         details: (item.details || []).filter((_, i) => i !== detailIndex),
                       });
                     }}
-                    aria-label="刪除細項"
+                    aria-label={t.deleteSubItem}
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -529,18 +535,18 @@ export default function EditorForm({ data, onChange }: Props) {
                 className="text-[12px] text-neutral-600 inline-flex items-center gap-1"
               >
                 <Plus className="w-3.5 h-3.5" />
-                新增細項
+                {t.addSubItem}
               </button>
             </div>
             <div className="grid grid-cols-2 gap-2">
-              <Field label="數量">
+              <Field label={t.qty}>
                 <AmountInput
                   integer
                   value={item.quantity}
                   onChange={(quantity) => updateItem(item.id, { quantity })}
                 />
               </Field>
-              <Field label="單價">
+              <Field label={t.unitPrice}>
                 <AmountInput
                   value={item.unitPrice}
                   onChange={(unitPrice) => updateItem(item.id, { unitPrice })}
@@ -552,58 +558,58 @@ export default function EditorForm({ data, onChange }: Props) {
       </div>
 
       <div className="space-y-2">
-        <div className="text-[12px] tracking-[0.14em] uppercase text-neutral-500">金額</div>
+        <div className="text-[12px] tracking-[0.14em] uppercase text-neutral-500">{t.amount}</div>
         <div className="grid grid-cols-3 gap-2">
-          <Field label="折扣">
+          <Field label={t.discount}>
             <AmountInput value={data.discount} onChange={(discount) => set('discount', discount)} />
           </Field>
-          <Field label="折扣方式">
+          <Field label={t.discountMode}>
             <select
               className={inputClass}
               value={data.discountType}
               onChange={(e) => set('discountType', e.target.value as DocData['discountType'])}
             >
-              <option value="amount">金額</option>
-              <option value="percent">百分比</option>
+              <option value="amount">{t.amount}</option>
+              <option value="percent">{t.percent}</option>
             </select>
           </Field>
-          <Field label="稅率 %">
+          <Field label={t.taxRate}>
             <AmountInput value={data.taxRate} onChange={(taxRate) => set('taxRate', taxRate)} />
           </Field>
         </div>
         <div className="rounded-xl bg-white border border-neutral-300 px-3 py-3 text-[13px] space-y-1">
           <div className="flex justify-between text-neutral-500">
-            <span>小計</span>
+            <span>{t.subtotal}</span>
             <span>{formatMoney(totals.subtotal, data.currency)}</span>
           </div>
           {totals.discountValue > 0 && (
             <div className="flex justify-between text-neutral-500">
-              <span>折扣</span>
+              <span>{t.discount}</span>
               <span>-{formatMoney(totals.discountValue, data.currency)}</span>
             </div>
           )}
           {data.taxRate > 0 && (
             <div className="flex justify-between text-neutral-500">
-              <span>稅項</span>
+              <span>{t.tax}</span>
               <span>{formatMoney(totals.tax, data.currency)}</span>
             </div>
           )}
           <div className="flex justify-between text-neutral-900 text-base pt-1">
-            <span>合計</span>
+            <span>{t.total}</span>
             <span>{formatMoney(totals.total, data.currency)}</span>
           </div>
         </div>
       </div>
 
       <div className="space-y-2">
-        <div className="text-[12px] tracking-[0.14em] uppercase text-neutral-500">條款</div>
-        <Field label="備註">
+        <div className="text-[12px] tracking-[0.14em] uppercase text-neutral-500">{t.terms}</div>
+        <Field label={t.remarks}>
           <textarea className={`${inputClass} min-h-[72px] resize-y`} value={data.notes} onChange={(e) => set('notes', e.target.value)} />
         </Field>
-        <Field label="付款條件">
+        <Field label={t.paymentTerms}>
           <input className={inputClass} value={data.paymentTerms} onChange={(e) => set('paymentTerms', e.target.value)} />
         </Field>
-        <Field label="轉賬資料">
+        <Field label={t.bankTransferInfo}>
           <input className={inputClass} value={data.bankInfo} onChange={(e) => set('bankInfo', e.target.value)} />
         </Field>
       </div>
