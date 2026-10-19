@@ -31,12 +31,14 @@ import StyleGallery from './components/docs/StyleGallery';
 import Studio from './components/docs/Studio';
 import LibraryPanel from './components/docs/LibraryPanel';
 import Gate from './components/docs/Gate';
+import { getDict, type Lang } from './i18n';
 import './styles/sheets.css';
 
 const DATA_KEY = 'macau-docs-data';
 const GATE_KEY = 'macau-docs-gate';
 const CUSTOM_KEY = 'macau-docs-custom';
 const STYLE_KEY = 'macau-docs-style';
+const LANG_KEY = 'macau-docs-lang';
 
 function readJson<T>(key: string, fallback: T): T {
   try {
@@ -74,6 +76,23 @@ function readGateUnlocked(): boolean {
 
 export default function App() {
   const [unlocked, setUnlocked] = useState(readGateUnlocked);
+  const [lang, setLang] = useState<Lang>(() => {
+    try {
+      return localStorage.getItem(LANG_KEY) === 'en' ? 'en' : 'zh';
+    } catch {
+      return 'zh';
+    }
+  });
+  const t = getDict(lang);
+  const toggleLang = () => {
+    const next: Lang = lang === 'zh' ? 'en' : 'zh';
+    setLang(next);
+    try {
+      localStorage.setItem(LANG_KEY, next);
+    } catch {
+      /* ignore */
+    }
+  };
   const [step, setStep] = useState<'gallery' | 'studio'>('gallery');
   const [styleId, setStyleId] = useState<StyleId | null>(() => readStyle(readJson(STYLE_KEY, null)));
   const [custom, setCustom] = useState<LayoutCustom>(() =>
@@ -181,12 +200,12 @@ export default function App() {
         };
         const next = [nextDoc, ...prev.filter((item) => item.id !== activeFileId)];
         void writeDocuments(next).catch(() => {
-          showNotice('儲存失敗，請再試一次。');
+          showNotice(t.saveFailed);
         });
         const handle = folderRef.current;
         if (handle) {
           void writeDocToFolder(handle, nextDoc).catch(() => {
-            showNotice('資料夾寫入失敗，已改存在此瀏覽器。');
+            showNotice(t.folderWriteFailed);
           });
         }
         return next;
@@ -204,7 +223,7 @@ export default function App() {
     const sorted = mergeDocumentLists(next, []);
     setFiles(sorted);
     void writeDocuments(sorted).catch(() => {
-      showNotice('儲存失敗，請再試一次。');
+      showNotice(t.saveFailed);
     });
   };
 
@@ -212,7 +231,7 @@ export default function App() {
     setFiles((prev) => {
       const next = mergeDocumentLists([doc, ...prev.filter((item) => item.id !== doc.id)], []);
       void writeDocuments(next).catch(() => {
-        showNotice('儲存失敗，請再試一次。');
+        showNotice(t.saveFailed);
       });
       return next;
     });
@@ -299,7 +318,7 @@ export default function App() {
     } catch (err) {
       if (err instanceof DOMException && err.name === 'AbortError') return;
       console.error(err);
-      window.alert('無法連結資料夾。請確認已允許存取。');
+      window.alert(t.cannotLinkFolder);
     }
   };
 
@@ -330,33 +349,33 @@ export default function App() {
       })
       .catch((err) => {
         if (err instanceof DOMException && err.name === 'AbortError') return;
-        showNotice('無法寫入本機檔案。');
+        showNotice(t.cannotWriteLocal);
       });
   };
 
   const importFile = async (file: File) => {
     try {
       if (!file.size) {
-        showNotice('這個檔是空的。請再按一次「存到本機」，改用下載出來的 JSON。');
+        showNotice(t.emptyFile);
         return;
       }
       const parsed = await readDocumentFromFile(file);
       if (!parsed) {
-        showNotice('打不開：請選澳門單據存出的 JSON 檔。');
+        showNotice(t.cannotOpen);
         return;
       }
       commitDocument(parsed);
       applyDocument(parsed);
       showNotice(`已打開「${parsed.name}」· ${styleNameOf(parsed.styleId)}`);
     } catch {
-      showNotice('讀取檔案失敗。');
+      showNotice(t.readFileFailed);
     }
   };
 
   const importDroppedFiles = (list: FileList | File[] | null) => {
     const file = [...(list || [])].find((item) => /\.json$/i.test(item.name) || item.type.includes('json'));
     if (file) void importFile(file);
-    else if (list && list.length) showNotice('請拖入澳門單據存出的 JSON 檔。');
+    else if (list && list.length) showNotice(t.dragJsonHint);
   };
 
   const pickStyle = (id: StyleId) => {
@@ -452,14 +471,22 @@ export default function App() {
             <div className="quo-mark text-[20px]">Quo-Mo</div>
           </button>
           <div className="hidden md:block text-[12px] text-neutral-500">
-            電子報價單 · 發票 · 收據　同一風格成套輸出
+            {t.tagline}
           </div>
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={toggleLang}
+              className="inline-flex items-center rounded-full border border-neutral-300 bg-white px-3 py-2 text-[13px] text-neutral-800"
+              title={lang === 'zh' ? 'Switch to English' : '切換中文'}
+            >
+              {lang === 'zh' ? 'EN' : '中'}
+            </button>
             <label
               htmlFor="macau-docs-open-file"
               className="inline-flex items-center gap-2 rounded-full border border-neutral-300 bg-white px-3 py-2 text-[13px] text-neutral-800 cursor-pointer"
             >
-              打開本機檔案
+              {t.openLocalFile}
             </label>
             <button
               type="button"
@@ -467,7 +494,7 @@ export default function App() {
               className="inline-flex items-center gap-2 rounded-full border border-neutral-300 bg-white px-3 py-2 text-[13px] text-neutral-800"
             >
               <FolderClosed className="w-4 h-4" />
-              文件
+              {t.files}
             </button>
             {step === 'gallery' && (
               <button
@@ -476,7 +503,7 @@ export default function App() {
                 onClick={() => enterStudio()}
                 className="inline-flex items-center gap-2 rounded-full bg-neutral-900 text-white px-4 py-2 text-[13px] disabled:opacity-40"
               >
-                填寫內容
+                {t.fillContent}
                 <ArrowRight className="w-4 h-4" />
               </button>
             )}
@@ -491,10 +518,11 @@ export default function App() {
               Quo Model
             </h1>
             <p className="text-neutral-500 mt-3 text-[15px] leading-relaxed">
-              十款目前最常用的報價／發票排版。選定後，報價單、發票與收據自動共用同一風格，金額即時合計，可輸出 JPG 或 PDF。填好的單可存成文件，之後再開繼續改。
+              {t.galleryDesc}
             </p>
           </div>
           <StyleGallery
+            lang={lang}
             selected={styleId}
             custom={custom}
             onSelect={pickStyle}
@@ -515,7 +543,7 @@ export default function App() {
                 onClick={() => enterStudio()}
                 className="inline-flex items-center gap-2 rounded-full bg-neutral-900 text-white px-6 py-3 text-[14px]"
               >
-                使用「{STYLE_LIST.find((s) => s.id === styleId)?.name}」開始填寫
+                {t.startWith(STYLE_LIST.find((s) => s.id === styleId)?.name || '')}
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -523,6 +551,7 @@ export default function App() {
         </main>
         ) : (
           <Studio
+            lang={lang}
             styleId={styleId || 'classic'}
             custom={custom}
             data={data}
@@ -540,6 +569,7 @@ export default function App() {
         )}
 
       <LibraryPanel
+        lang={lang}
         open={libraryOpen}
         files={files}
         activeFileId={activeFileId}
