@@ -7,8 +7,10 @@ import { exportJpg, exportPdf, fileBase } from '../../lib/exportDoc';
 import DocumentSheet from './DocumentSheet';
 import EditorForm from './EditorForm';
 import CustomizePanel from './CustomizePanel';
+import { getDict, type Lang } from '../../i18n';
 
 type Props = {
+  lang: Lang;
   styleId: StyleId;
   custom: LayoutCustom;
   data: DocData;
@@ -24,13 +26,8 @@ type Props = {
   onDeleteFormat: (id: string) => void;
 };
 
-const DOCS: { id: DocType; label: string }[] = [
-  { id: 'quotation', label: '報價單' },
-  { id: 'invoice', label: '發票' },
-  { id: 'receipt', label: '收據' },
-];
-
 export default function Studio({
+  lang,
   styleId,
   custom,
   data,
@@ -45,6 +42,12 @@ export default function Studio({
   onApplyFormat,
   onDeleteFormat,
 }: Props) {
+  const t = getDict(lang);
+  const DOCS: { id: DocType; label: string }[] = [
+    { id: 'quotation', label: t.quotation },
+    { id: 'invoice', label: t.invoice },
+    { id: 'receipt', label: t.receipt },
+  ];
   const [docType, setDocType] = useState<DocType>('quotation');
   const [scale, setScale] = useState(0.55);
   const [busy, setBusy] = useState<string | null>(null);
@@ -87,7 +90,7 @@ export default function Studio({
       }
     } catch (err) {
       console.error(err);
-      window.alert('匯出失敗，請再試一次。');
+      window.alert(t.exportFailed);
     } finally {
       setBusy(null);
     }
@@ -99,11 +102,11 @@ export default function Studio({
         <div className="sticky top-0 z-10 -mx-5 px-5 pt-1 pb-4 bg-[#ececec]">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <div className="text-[11px] tracking-[0.16em] uppercase text-neutral-500">風格系列</div>
+              <div className="text-[11px] tracking-[0.16em] uppercase text-neutral-500">{t.styleSeries}</div>
               <div className="text-neutral-900 text-lg">{style?.name}</div>
             </div>
             <button type="button" onClick={onChangeStyle} className="text-[12px] text-neutral-600 hover:text-neutral-900">
-              更換
+              {t.changeStyle}
             </button>
           </div>
           <div className="flex gap-2 mb-3">
@@ -113,7 +116,7 @@ export default function Studio({
               className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg bg-neutral-900 px-3 py-2 text-[12px] text-white"
             >
               <Save className="w-3.5 h-3.5" />
-              {fileName ? '儲存' : '存成文件'}
+              {fileName ? t.save : t.saveAsDoc}
             </button>
             <button
               type="button"
@@ -121,12 +124,12 @@ export default function Studio({
               className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-neutral-300 bg-white px-3 py-2 text-[12px] text-neutral-800"
             >
               <FolderClosed className="w-3.5 h-3.5" />
-              文件
+              {t.files}
             </button>
           </div>
           {fileName && (
             <div className="mb-3 text-[11px] text-neutral-500 truncate" title={fileName}>
-              目前：{fileName}
+              {t.currentFile}：{fileName}
             </div>
           )}
           <button
@@ -134,10 +137,11 @@ export default function Studio({
             onClick={() => setShowCustom((v) => !v)}
             className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-[12px] text-neutral-700 hover:border-neutral-800"
           >
-            {showCustom ? '收起排版設定' : '調整排版'}
+            {showCustom ? t.hideLayoutSettings : t.adjustLayout}
           </button>
         </div>
         <CustomizePanel
+          lang={lang}
           custom={custom}
           onChange={onCustomChange}
           open={showCustom || styleId === 'custom'}
@@ -147,7 +151,7 @@ export default function Studio({
           onDeleteFormat={onDeleteFormat}
         />
         <div className="mt-2">
-          <EditorForm data={data} onChange={onDataChange} />
+          <EditorForm lang={lang} data={data} onChange={onDataChange} />
         </div>
       </aside>
 
@@ -213,7 +217,7 @@ export default function Studio({
               className="inline-flex items-center gap-1.5 rounded-lg bg-neutral-900 px-3 py-2 text-[12px] text-white disabled:opacity-50"
             >
               {busy === 'series' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Layers className="w-3.5 h-3.5" />}
-              匯出三聯 PDF
+              {t.exportSeries}
             </button>
           </div>
         </div>
@@ -238,7 +242,7 @@ export default function Studio({
             </div>
           </div>
           <p className="text-center text-[11px] text-neutral-500 mt-6">
-            報價單、發票、收據共用同一風格。編號自動成套：QT / INV / RC。
+            {t.docNumberHint}
           </p>
         </div>
       </section>
