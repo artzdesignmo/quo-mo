@@ -474,6 +474,7 @@ export default function App() {
             {t.tagline}
           </div>
           <div className="flex items-center gap-2">
+            <a href="https://buymeacoffee.com/whynotartmoney" target="_blank" rel="noopener" title="Buy me a coffee" aria-label="Buy me a coffee" style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:22,height:22,opacity:.85,lineHeight:0,flexShrink:0}}><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#8a867e" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M17 8h1a3 3 0 0 1 0 6h-1"/><path d="M3 8h14v6a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><path d="M7 2v2M11 2v2M15 2v2"/></svg></a>
             <button
               type="button"
               onClick={toggleLang}
